@@ -1,0 +1,32 @@
+CMPSC473 PROJECT 2 REPORT
+Mutian Fan (mzf5189)
+Matthew Sickler (mzs6333)
+
+For this project, only made the one assumption given to us in the project description, which was that the minimum size of allocation
+in the buddy_alloc is 1024 bytes.
+
+We split up the project evenly, with one person taking the buddy system (including both alloc and free) and one person taking the
+slab system (also including alloc and free).
+We worked on init and the special data structures together at the very start, and we just copied the helper functions for the data
+structures from the previous project because they were very similar if not the same (enqueue, dequeue, rip).
+General debugging towards the end of the project was collaborative, as was the creation of this report and other final test cases.
+
+The overall design of this project is fairly straightforward and modular. We realized that the slab system was contingent on the
+buddy system, so we split each system into their own functions, then called those functions inside the larger my_free and my_alloc
+functions. This also allowed us to simply call the buddy_alloc function inside the buddy_free function. Linked lists were also used
+a lot in our project, so we had helper functions to manipulate those which improved modularity. The slab allocator was especially well
+broken up into many helper functions with clear purpose and intent - very proud of how that one came together.
+
+In terms of specifics - buddy alloc does what it should be doing from class notes - finding the next largest power of 2 available that
+is valid for an input size and grabbing it out of our big memory block as needed. We use two main data strcutures of available space
+and allocated space within two lists in order to achieve this feat. Slab alloc uses buddy alloc in order to get its slabs, then properly
+creates its own data structure and adds to its own queue of slab table entries - which are also as described in class. There are many
+helper functions to increase code readability and reduce "spaghetti code" each are well commented with their purpose and are true to
+their function name.
+
+As for specific quirks, there might be a bit of inefficiency in memory usage because we were not always able to free our data
+structures (such as nodes, linked lists) immediately. However, we did try to reuse existing temporary allocations in order to
+lessen the memory usage. Another important thing is that we don't actually use the "head" for anything (size of the block), we
+just remember that there exists an offset and take that into account when finding/returning values. Also, when doing the buddy_free
+we did not think of it exactly like a tree as was mentioned in class - instead, we did some calculations to see if two contiguous
+holes were on the boundary of the next higher power of two and if they were, then they were combined.
